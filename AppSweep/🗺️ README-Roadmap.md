@@ -1,8 +1,19 @@
 # AppSweep: Gelecek Yol Haritası
-
-Bu doküman, projenin MVP (v1.0) sonrasındaki vizyonunu ve potansiyel büyüme alanlarını içerir.
-
 ---
+## v1.0 (Mevcut MVP)
+
+* [X] Sürükle-Bırak arayüzü
+* [X] Kalıntı Tespiti (Sandbox kaldırıldı)
+* [X] Reaktif Sonuç Ekranı
+* [ ] **Güvenli Silme (Bloke Edildi - Hata 5)**
+
+## v1.1 (Ayrıcalıklı Silme)
+
+* [ ] **Ayrıcalıklı Silme (Admin Yetkisi):**
+    * *ANA GÜVENLİK ÖZELLİĞİ.*
+    * `/Applications` klasöründeki ana `.app` dosyalarını da silebilmek için `SMJobBless` kullanarak `root` yetkilerine sahip bir "Helper Tool" (Yardımcı Araç) projesi oluşturmak.
+    * Ana uygulama ile Helper Tool arasında **XPC** iletişim kanalını kurmak.
+    * `deleteFiles()` fonksiyonunu, silme işini XPC üzerinden Helper Tool'a delege edecek (devredecek) şekilde yeniden yazmak.
 
 ## v2.0 (Pro Sürüm Temelleri)
 

@@ -122,4 +122,65 @@ class AppScannerViewModel: ObservableObject {
         
         return foundItems
     }
+    
+    // --- GÜNCELLENMİŞ SİLME FONKSİYONU (YOL 1) ---
+        
+        func deleteFiles() {
+            print("--- Silme İşlemi Başlatıldı (Sadece Kalıntılar) ---")
+            
+            // 1. Stratejik Karar: Sadece kalıntı dosyaları sil.
+            // Ana .app dosyasını silmeye ÇALIŞMIYORUZ, çünkü /Applications
+            // klasöründe 'permission' (izin) hatası (Hata 5) alıyoruz.
+            // Kullanıcı ana uygulamayı manuel olarak çöpe taşımalı.
+            let itemsToDelete: [FileItem] = foundFiles
+            
+            guard !itemsToDelete.isEmpty else {
+                print("Silinecek kalıntı dosya bulunamadı.")
+                
+                // Kalıntı olmasa bile arayüzü "temizlenmiş" durumuna getir
+                DispatchQueue.main.async {
+                    // Listeyi boşalt (zaten boştu)
+                    self.foundFiles = []
+                    // Ana uygulamayı ekranda bırak (kullanıcıya 'bunu sen sil' demek için)
+                    // self.appToScan = nil  <-- Bu satırı ÇALIŞTIRMA
+                }
+                return
+            }
+
+            let fileManager = FileManager.default
+            var deletedCount = 0
+            
+            // 2. Her bir KALINTI dosyasını Çöp Sepeti'ne taşımayı dene
+            for item in itemsToDelete {
+                do {
+                    // Bu, Apple'ın "Çöp Sepeti'ne Taşı" API'sidir.
+                    // Bu klasörlerde (~/Library) iznimiz var.
+                    try fileManager.trashItem(at: item.path, resultingItemURL: nil)
+                    
+                    print("Başarıyla çöpe taşındı: \(item.path.lastPathComponent)")
+                    deletedCount += 1
+                    
+                } catch {
+                    // Hata oluşursa (örn: izinler), konsola yazdır
+                    print("❌ HATA: \(item.path.lastPathComponent) çöpe taşınamadı. Hata: \(error.localizedDescription)")
+                }
+            }
+            
+            print("--- Silme İşlemi Tamamlandı ---")
+            print("\(deletedCount) / \(itemsToDelete.count) kalıntı dosya çöpe taşındı.")
+
+            // 3. Arayüzü "Temizlendi" Durumuna Güncelle
+            // Silme işlemi bittikten sonra arayüzü güncellemeliyiz.
+            DispatchQueue.main.async {
+                // 'foundFiles' listesini boşalt.
+                // Bu, @Published ile yayınlandığı için, ResultsView'deki
+                // liste otomatik olarak kaybolacak.
+                self.foundFiles = []
+                
+                // 'appToScan'i NİL YAPMA!
+                // Ana uygulamayı ekranda bırakıyoruz ki kullanıcı
+                // "Kalıntılar gitti, şimdi bunu silmeliyim" mesajını alsın.
+                // self.appToScan = nil
+            }
+        }
 }

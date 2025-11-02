@@ -128,7 +128,7 @@ struct ResultsView: View {
                 // "Tümünü Sil" Butonu
                 // TODO (Faz 2): Bu butona 'viewModel.deleteFiles()' fonksiyonunu bağla
                 Button(action: {
-                    print("Silme işlemi başlatıldı! (Henüz kodlanmadı)")
+                    viewModel.deleteFiles()
                 }) {
                     Image(systemName: "trash.fill")
                     Text("Tümünü Güvenle Sil")

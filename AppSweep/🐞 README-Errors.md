@@ -43,3 +43,14 @@ Bu doküman, geliştirme sırasında karşılaşılan ve çözülen önemli hata
     * **Eski Kod:** `FileRow(file: viewModel.appToScan!)`
     * **Yeni Güvenli Kod:** `if let appFile = viewModel.appToScan { FileRow(file: appFile) }`
     * Bu sayede, `appToScan` `nil` olduğunda, kod bloğu güvenli bir şekilde atlanır ve çökme engellenir.
+
+### Hata 5: "permission to access it" (Erişim İzni Hatası) - ÇALIŞILIYOR (Geçici Çözüm Uygulandı)
+
+* **Nerede:** `AppScannerViewModel.swift` içindeki `deleteFiles()` fonksiyonu.
+* **Belirti:** Ana `.app` dosyası (`/Applications` içindeyken) silinmeye çalışıldığında "İznin yok" hatası alındı.
+* **Neden:** Uygulamamız `user` (kullanıcı) izniyle çalışır ve `admin`/`system` sahipliğindeki `/Applications` klasöründe yazma izni yoktur.
+* **Geçici Çözüm (v1.0 - Yol 1):**
+    1.  MVP'yi (Minimum Viable Product) tamamlamak için, `deleteFiles()` fonksiyonu *sadece* kalıntı dosyalarını (`foundFiles`) silecek şekilde güncellendi.
+    2.  Ana `.app` dosyası (`appToScan`) artık silinmeye çalışılmıyor, böylece "İzin Hatası" alınmıyor.
+    3.  Silme işleminden sonra, arayüzde sadece ana `.app` dosyası kalır; bu, kullanıcıya "Kalıntıları sildim, şimdi bu ana dosyayı sen sürükle-bırak" mesajını verir.
+* **Kalıcı Çözüm (v1.1 Planı):** `root` yetkileriyle çalışan ve `SMJobBless` ile yüklenen ayrıcalıklı bir "Helper Tool" (Yardımcı Araç) oluşturulacak ve silme işlemi XPC üzerinden bu araca devredilecek.
