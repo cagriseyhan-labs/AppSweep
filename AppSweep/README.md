@@ -10,8 +10,9 @@ Bu proje, bir backend geliştiricisinin (Java/TypeScript) Swift ve SwiftUI düny
 
 * **Sürükle ve Bırak:** Uygulamaları analiz etmek için ana pencereye sürükleyin.
 * **Akıllı Kalıntı Tespiti:** Uygulamanın "parmak izini" (Bundle ID) ve adını kullanarak sistem genelindeki ilişkili dosyaları bulur.
-* **Önizleme ve Onay:** Nelerin silineceğini net bir şekilde gösteren bir onay ekranı (Geliştirilecek).
-* **Güvenli Silme:** Dosyalar kalıcı olarak silinmez, kullanıcının geri alabilmesi için **Çöp Sepeti'ne** taşınır.
+* **Reaktif Sonuç Ekranı:** Tarama bittiği anda, ana uygulamayı ve bulunan tüm kalıntı dosyalarını bir liste halinde gösterir.
+* **Yeni Tarama:** Tek bir butonla mevcut sonucu temizleyip ana "Sürükle-Bırak" ekranına dönme.
+* **Güvenli Silme (Geliştiriliyor):** Bulunan tüm dosyaları (uygulamanın kendisi + kalıntılar) Çöp Sepeti'ne taşır.
 
 ## 🛠️ Teknik Altyapı
 

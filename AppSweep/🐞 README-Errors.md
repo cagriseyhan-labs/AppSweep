@@ -23,7 +23,23 @@ Bu doküman, geliştirme sırasında karşılaşılan ve çözülen önemli hata
 ### Hata 3: "0 adet kalıntı dosya bulundu"
 
 * **Nerede:** Uygulamanın tamamı.
-* **Belirti:** Kod, `Calculator.app` veya `IntelliJ` gibi uygulamalar için bile "0 adet kalıntı dosya bulundu" çıktısı veriyordu.
+* **Belirti:** Kod, `IntelliJ` gibi uygulamalar için bile "0 adet kalıntı dosya bulundu" çıktısı veriyordu.
 * **Hata Ayıklama (Debug):** Konsol loglarına bakıldığında, arama yolunun `/Users/cagriseyhan/Library/` yerine `/Users/cagriseyhan/Library/Containers/com.cagriseyhan.AppSweep/Data/Library/` olduğu görüldü.
 * **Neden:** Uygulama, Xcode tarafından varsayılan olarak **"App Sandbox" (Korumalı Alan)** içinde çalıştırılıyordu. Bu güvenlik özelliği, uygulamanın gerçek `~/Library` klasörüne erişmesini engelliyor ve ona sanal, boş bir `Library` klasörü veriyordu.
 * **Çözüm:** Proje Ayarları -> "Signing & Capabilities" sekmesi altından **"App Sandbox"** yeteneği (X) butonuna basılarak kaldırıldı.
+
+### Hata 4: "Thread 1: Fatal error: Unexpectedly found nil while unwrapping an Optional value"
+
+* **Nerede:** `ContentView.swift` içindeki `ResultsView` struct'ı.
+* **Kod:** `FileRow(file: viewModel.appToScan!)`
+* **Belirti:** "Yeni Tarama" butonuna basıldığında uygulama çöküyordu.
+* **Neden:** Bu bir "Race Condition" (Yarış Durumu) hatasıydı.
+    1.  Buton, `viewModel.appToScan = nil` olarak ayarlıyordu.
+    2.  `ContentView` (Ana Yönlendirici), `appToScan`'in `nil` olduğunu fark edip `DropZoneView`'i göstermeye hazırlanıyordu.
+    3.  Ancak bu ekran değişimi tamamlanmadan *hemen önce*, ekrandaki `ResultsView` de değişikliği fark edip kendini son bir kez yenilemeye çalıştı.
+    4.  Yenilenirken `viewModel.appToScan!` satırına geldi, ancak bu değer artık `nil` idi.
+    5.  `!` (force-unwrap / zorla açma) operatörü, `nil` bir değeri açmaya çalıştığı için uygulama "Fatal Error" (Ölümcül Hata) ile çöktü.
+* **Çözüm:** `!` (Zorla Açma) operatörünü kullanmak yerine, **`if let`** (Güvenli Açma / Optional Binding) kullanıldı.
+    * **Eski Kod:** `FileRow(file: viewModel.appToScan!)`
+    * **Yeni Güvenli Kod:** `if let appFile = viewModel.appToScan { FileRow(file: appFile) }`
+    * Bu sayede, `appToScan` `nil` olduğunda, kod bloğu güvenli bir şekilde atlanır ve çökme engellenir.
