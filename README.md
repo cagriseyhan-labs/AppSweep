@@ -1,4 +1,11 @@
-# AppSweep (Çalışma Adı)
+# AppSweep (Çalışma Adı) — 🚨 TAŞINDI / MOVED
+
+> [!IMPORTANT]
+> **Bu proje Panecker adıyla yeni bir depoya taşınmıştır.** 
+> Geliştirmeye ve güncel sürümlere aşağıdaki yeni adresten erişebilirsiniz:
+> **Yeni Depo / New Repo:** [https://github.com/cagriseyhan-labs/panecker](https://github.com/cagriseyhan-labs/panecker)
+
+---
 
 AppSweep, macOS uygulamalarını ve geride bıraktıkları *tüm* kalıntı dosyalarını (Ayarlar, Önbellek, Destek dosyaları) tek bir tıklamayla, güvenli bir şekilde kaldıran bir yardımcı programdır.
 
